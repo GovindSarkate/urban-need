@@ -1,13 +1,34 @@
+import axios from 'axios';
 import React, { useState } from 'react'; 
 import { Navbar, Container, Form, Button, NavDropdown } from 'react-bootstrap';
 import { Link, useHistory } from 'react-router-dom';
+import { Redirect } from 'react-router-dom/cjs/react-router-dom.min';
 
 function NavBar() {
     const [selectedLocation, setSelectedLocation] = useState(null);
+    const isLoggedIn=localStorage.getItem("isLoggedIn")
+    const [navigator,setNavigator] = useState(1);
 
     const handleLocationSelect = (eventKey, event) => {
         setSelectedLocation(eventKey);
     };
+
+    const onClickHandlerLogin=()=>{
+        console.log("Demo");
+        setNavigator(2);
+        return;
+    }
+    const onClickHandlerLogout=()=>{
+        setNavigator(3);
+        return;
+    }
+    if (navigator===2){
+        
+        return(<Redirect to={{pathname:"/login"}}/>)
+    }
+    if (navigator===3){
+        return(<Redirect to={{pathname:"/login"}}/>)
+    }
 
     return (
         <Navbar expand="lg" className="bg-body-tertiary" style={{ border: '1px solid rgba(0, 0, 0, 0.1)' }}>
@@ -36,7 +57,10 @@ function NavBar() {
                     </div>
                     {/* Use Link component to redirect to LoginandRegister component */}
                     {/* <Link to="/login" className="btn btn-outline-dark">Login</Link> */}
-                    <a href='/login' className="btn btn-outline-dark">Login</a>
+                    {
+                        (isLoggedIn || isLoggedIn===false)?(<button onClick={onClickHandlerLogout} className="btn btn-outline-dark">Logout</button>):(<button onClick={onClickHandlerLogin} className="btn btn-outline-dark">Login</button>)
+                    }
+                    
                 </Navbar.Collapse>
             </Container>
         </Navbar>

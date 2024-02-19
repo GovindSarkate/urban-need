@@ -7,12 +7,14 @@ import {
     MDBBtn,
 } from 'mdb-react-ui-kit';
 import axios from 'axios';
+import { Redirect } from 'react-router-dom/cjs/react-router-dom.min';
 
 export default function LoginandRegister() {
     const [loginFormData, setLoginFormData] = useState({
         loginEmail: '',
         loginPassword: ''
     });
+    const [navigator,SetNavigator]= useState(1)
 
     const [registerFormData, setRegisterFormData] = useState({
         registerName: '',
@@ -41,12 +43,28 @@ export default function LoginandRegister() {
         e.preventDefault();
         console.log("Login form submitted with data:", loginFormData);
         // You can add your login logic here
+        axios.post("/api/login",{"email":loginFormData.loginEmail, "password":loginFormData.loginPassword})
+        .then((response) => {
+            localStorage.setItem("isLoggedIn",true);
+            SetNavigator(2);
+        })
+        .catch((error) => {
+            console.error(error);
+            SetNavigator(4)
+        })
     };
 
     const handleRegisterSubmit = (e) => {
         e.preventDefault();
         console.log("Register form submitted with data:", registerFormData);
         // You can add your register logic here
+        axios.post("/api/",{})
+        .then((response)=>{
+            SetNavigator(3);
+        })
+        .catch((error)=>{
+            console.error(error);
+        })
     };
 
     const toggleRegister = () => {
@@ -97,15 +115,14 @@ export default function LoginandRegister() {
             registerCity: '' // Reset city when state changes
         });
     };
-    const onSubmit=()=>{
-        axios.post("/api/login",{"email":loginFormData.loginEmail, "password":loginFormData.loginPassword})
-        .then((response) => {
-            localStorage.setItem("isLoggedIn",true);
-        })
-        .catch((error) => {
-            console.error(error);
-        })
-
+    if (navigator === 2){
+        return (<Redirect to={{pathname:"/"}}/>);
+    }
+    if (navigator=== 3){
+        return(<Redirect to={{pathname:"/login"}}/>)
+    }
+    if (navigator === 4){
+        return (<Redirect to={{ pathname:"/error"}}/>)
     }
     return (
         <MDBContainer className="py-5">
@@ -139,7 +156,7 @@ export default function LoginandRegister() {
                                         required
                                     />
                                 </div>
-                                <MDBBtn onClick={onSubmit} type="submit" color="primary" className="w-100">Login</MDBBtn>
+                                <MDBBtn type="submit" color="primary" className="w-100">Login</MDBBtn>
                             </form>
                             <p className="text-center mt-3">Don't have an account? <button onClick={toggleRegister} className="btn btn-secondary">Register</button></p>
                         </>

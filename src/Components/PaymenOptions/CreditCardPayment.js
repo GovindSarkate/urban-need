@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import 'react-credit-cards/es/styles-compiled.css';
+
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import '../../CSS/CreditCard.css'; // Import your CSS file for styling
